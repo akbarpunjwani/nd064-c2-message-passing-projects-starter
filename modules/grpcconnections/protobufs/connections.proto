@@ -1,0 +1,54 @@
+//\modules\grpccon\protobufs>python -m grpc_tools.protoc -I ../protobufs --python_out=. --grpc_python_out=. ../protobufs/connections.proto
+syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
+
+message Date {
+  // Year of the date. Must be from 1 to 9999, or 0 to specify a date without
+  // a year.
+  int32 year = 1;
+
+  // Month of a year. Must be from 1 to 12, or 0 to specify a year without a
+  // month and day.
+  int32 month = 2;
+
+  // Day of a month. Must be from 1 to 31 and valid for the year and month, or 0
+  // to specify a year by itself or a year and month where the day isn't
+  // significant.
+  int32 day = 3;
+}
+
+message LocationConnection {
+    int32 person_id = 1;
+    string longitude = 2;
+    string latitude = 3;
+    // google.protobuf.Timestamp creation_time = 4;
+    string creation_time = 4;
+    int32 id = 5;
+}
+
+message PersonConnection {
+    int32 id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string company_name = 4;
+}
+
+message LocPersonConnection {
+    LocationConnection location = 1;
+    PersonConnection person = 2;
+}
+
+message ConnectionRequest {
+    int32 person_id = 1;
+    Date start_date = 2;
+    Date end_date = 3; 
+    int32 meters = 4;
+}
+
+message ConnectionResponse {
+    repeated LocPersonConnection locpersons = 1;
+}
+
+service Connections {
+    rpc find_contacts (ConnectionRequest) returns (ConnectionResponse);
+}

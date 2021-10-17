@@ -1,0 +1,173 @@
+version: "3.9"
+
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '9092:9092'
+      - '9093:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INSIDE
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      
+    depends_on:
+      - zookeeper
+
+  db:
+    image: postgis/postgis:12-2.5-alpine
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=geoconnections
+      - POSTGRES_USER=ct_admin
+      - POSTGRES_PASSWORD=d293aW1zb3NlY3VyZQ==
+    ports:
+      - 54321:5432
+
+  apiperson:
+    build: ./apiperson
+    volumes:
+      - ./apiperson:/apiperson
+    environment:
+      - DB_NAME=geoconnections
+      - DB_USERNAME=ct_admin
+      - DB_PASSWORD=d293aW1zb3NlY3VyZQ==
+      # - DB_HOST=postgres
+      - DB_HOST=modules_db_1
+      - DB_PORT=5432
+      - KAFKA_SERVER=kafka
+      - KAFKA_PORT=9092
+      - KAFKA_TOPIC=udaconnectlogs
+    ports:
+      - 30001:5000
+    depends_on:
+      - db
+      - kafka
+
+  apilocation:
+    build: ./apilocation
+    volumes:
+      - ./apilocation:/apilocation
+    environment:
+      - DB_NAME=geoconnections
+      - DB_USERNAME=ct_admin
+      - DB_PASSWORD=d293aW1zb3NlY3VyZQ==
+      # - DB_HOST=postgres
+      - DB_HOST=modules_db_1
+      - DB_PORT=5432
+      - KAFKA_SERVER=kafka
+      - KAFKA_PORT=9092
+      - KAFKA_TOPIC=udaconnectlogs
+    ports:
+      - 30002:5000
+    depends_on:
+      - db
+      - kafka
+
+  grpcconnections:
+    build: ./grpcconnections
+    volumes:
+      - ./grpcconnections:/grpcconnections
+    environment:
+      - DB_NAME=geoconnections
+      - DB_USERNAME=ct_admin
+      - DB_PASSWORD=d293aW1zb3NlY3VyZQ==
+      - DB_HOST=modules_db_1
+      - DB_PORT=5432
+      - KAFKA_SERVER=kafka
+      - KAFKA_PORT=9092
+      - KAFKA_TOPIC=udaconnectlogs
+    ports:
+      - 50052:50051
+    depends_on:
+      - db
+      - kafka
+      - apiperson
+      - apilocation  
+
+  apiconnection:
+    build: ./apiconnection
+    volumes:
+      - ./apiconnection:/apiconnection
+    environment:
+      - DB_NAME=geoconnections
+      - DB_USERNAME=ct_admin
+      - DB_PASSWORD=d293aW1zb3NlY3VyZQ==
+      # - DB_HOST=postgres
+      - DB_HOST=modules_db_1
+      - DB_PORT=5432
+      - KAFKA_SERVER=kafka
+      - KAFKA_PORT=9092
+      - KAFKA_TOPIC=udaconnectlogs
+    ports:
+      - 30003:5000
+    depends_on:
+      - grpcconnections
+      - kafka
+
+  logger:
+    build: ./logger
+    volumes:
+      - ./logger:/logger
+    environment:
+      - DB_NAME=geoconnections
+      - DB_USERNAME=ct_admin
+      - DB_PASSWORD=d293aW1zb3NlY3VyZQ==
+      - DB_HOST=modules_db_1
+      - DB_PORT=5432
+      - KAFKA_SERVER=kafka
+      - KAFKA_PORT=9092
+      - KAFKA_TOPIC=udaconnectlogs
+    ports:
+      - 9099:5000
+    depends_on:
+      - db
+      - kafka
+
+      # api:
+  #   build: ./api    
+  #   volumes:
+  #     - ./api:/api
+  #   environment:
+  #     - DB_NAME=geoconnections
+  #     - DB_USERNAME=ct_admin
+  #     - DB_PASSWORD=d293aW1zb3NlY3VyZQ==
+  #     # - DB_HOST=postgres
+  #     - DB_HOST=modules_db_1
+  #     - DB_PORT=5432
+  #     - KAFKA_SERVER=kafka
+  #     - KAFKA_PORT=9092
+  #     - KAFKA_TOPIC=udaconnectlogs
+  #   ports:
+  #     - 30004:5000
+  #   depends_on:
+  #     - logger
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/frontend
+    environment:
+      - API_PERSON_HOST=modules_api_1
+      - API_PERSON_PORT=30001
+      - API_LOCATION_HOST=modules_apiloc_1
+      - API_LOCATION_PORT=30002
+    ports:
+      - 30000:3000
+    depends_on:
+      - apiperson
+      - apilocation
+      - apiconnection
