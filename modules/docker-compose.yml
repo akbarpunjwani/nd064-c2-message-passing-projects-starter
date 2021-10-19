@@ -137,7 +137,7 @@ services:
       - db
       - kafka
 
-      # api:
+  # api:
   #   build: ./api    
   #   volumes:
   #     - ./api:/api
