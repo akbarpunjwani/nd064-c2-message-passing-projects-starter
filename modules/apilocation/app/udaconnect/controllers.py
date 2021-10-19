@@ -28,7 +28,7 @@ def log2kafka(msg):
 
 DATE_FORMAT = "%Y-%m-%d"
 
-api = Namespace("UdaConnect", description="Connections via geolocation.")  # noqa
+api = Namespace("ApiLocation", description="Person wise Geolocation and Geolocation wise Person Ids")  # noqa
 
 # TODO: This needs better exception handling
 

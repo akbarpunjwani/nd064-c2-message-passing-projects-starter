@@ -1,0 +1,33 @@
+APIPERSON (REST Api)
+- Its an interface for frontend app to get person data via HTTP calls
+- It directly interact with database with data manipulation queries
+- Serves as PRODUCER to KAFKA message queue under topic udaconnectlogs
+
+-----
+
+APILOCATION (REST Api)
+- Its an interface for frontend app to get geolocation specific data via HTTP
+- It directly interact with database with data manipulation queries
+- Serves as PRODUCER to KAFKA message queue under topic udaconnectlogs
+
+-----
+
+APICONNECTION (REST Api)
+- Its an interface for frontend app to get person geolocation based connections via HTTP
+- It interacts with the gRPCConnections Server to fetch the connections of any person w.r.t its geolocations
+- Serves as PRODUCER to KAFKA message queue under topic udaconnectlogs
+
+-----
+
+GRPCCONNECTIONS (gRPC Server)
+- Communication limits to internal use only
+- Enables transparent and type sensitive communication with its client which in our case another REST Api in its own container
+- Currently uses fetch library to request data from database in order to reuse the code, however, in future it would be further enhanced to enable more scalability
+- Serves as PRODUCER to KAFKA message queue under topic udaconnectlogs
+
+-----
+
+LOGGER (KAFKA CONSUMER)
+- Console where kafka/logconsumer.py could be called to fetch & display all messages in queue under the topic udaconnectlogs
+- Very simple to use KAFKA message queues with PUB/SUB model
+- KAFKA Server & Zookeeper is prerequisite

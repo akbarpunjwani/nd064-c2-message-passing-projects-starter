@@ -1,0 +1,16 @@
+GRPC documentation
+How to make a request for Connections?
+-------------------
+A) Create a ConnectionRequest object with below parameters:
+
+   1) PersonId: The identity of person for whom contacts need to searched
+
+   2) Start_Date: Create an object of Date having year, month and day as 3 individual integers
+
+   3) End_Date: Create an object of Date having year, month and day as 3 individual integers
+
+   4) Meters: An integer representing the distance in meters within which the geolocations of contacts matches with the subject person id
+
+B) Call find_contacts() procedure while passing the ConnectionRequest object and getting the ConnectionResponse object
+
+C) The ConnectionResponse object holds the string with list of contact person details and which could be further parsed to JSON where required.
