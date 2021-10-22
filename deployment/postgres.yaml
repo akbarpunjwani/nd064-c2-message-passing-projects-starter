@@ -39,7 +39,10 @@ spec:
   selector:
     app: postgres
   ports:
-   - port: 5432
+   - name: "5432"
+     port: 5432
+     targetPort: 5432
+     nodePort: 30032                
 ---
 apiVersion: apps/v1
 kind: Deployment

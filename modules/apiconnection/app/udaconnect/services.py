@@ -26,7 +26,7 @@ class ConnectionService:
         large datasets. This is by design: what are some ways or techniques to help make this data integrate more
         smoothly for a better user experience for API consumers?
         """
-        channel = grpc.insecure_channel("modules_grpcconnections_1:50051")
+        channel = grpc.insecure_channel("udaconnect-grpcconnections:50051")
         client = ConnectionsStub(channel)
 
         fromdate = Date(

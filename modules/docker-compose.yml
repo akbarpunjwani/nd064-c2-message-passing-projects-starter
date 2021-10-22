@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.3"
 
 services:
   zookeeper:
@@ -35,7 +35,7 @@ services:
       - POSTGRES_USER=ct_admin
       - POSTGRES_PASSWORD=d293aW1zb3NlY3VyZQ==
     ports:
-      - 54321:5432
+      - 30090:5432
 
   apiperson:
     build: ./apiperson

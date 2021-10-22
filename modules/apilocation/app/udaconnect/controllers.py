@@ -20,9 +20,12 @@ def log2kafka(msg):
     TOPIC_NAME = os.environ["KAFKA_TOPIC"]
     KAFKA_SERVER = os.environ["KAFKA_SERVER"] + ':' + os.environ["KAFKA_PORT"]
 
-    producer = KafkaProducer(bootstrap_servers=KAFKA_SERVER)
-    producer.send(TOPIC_NAME, value=msg.encode('utf-8'))
-    producer.flush()
+    try:
+        producer = KafkaProducer(bootstrap_servers=KAFKA_SERVER)
+        producer.send(TOPIC_NAME, value=msg.encode('utf-8'))
+        producer.flush()
+    except:
+        kafkaisnotready=1
     #############
 
 

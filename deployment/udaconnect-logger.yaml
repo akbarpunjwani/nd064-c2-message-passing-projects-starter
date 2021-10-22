@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: udaconnect-logger
+  name: udaconnect-logger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: udaconnect-logger
+  template:
+    metadata:
+      labels:
+        service: udaconnect-logger
+    spec:
+      containers:
+      - image: punjwaniakbar/udaconnect-logger:latest
+        name: udaconnect-logger
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 30091
+        env:
+        - name: DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: DB_NAME
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: DB_PORT
+        - name: KAFKA_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: KAFKA_SERVER
+        - name: KAFKA_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: KAFKA_PORT
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: KAFKA_TOPIC
+      restartPolicy: Always

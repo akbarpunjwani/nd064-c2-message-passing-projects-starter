@@ -20,9 +20,12 @@ def log2kafka(msg):
     TOPIC_NAME = os.environ["KAFKA_TOPIC"]
     KAFKA_SERVER = os.environ["KAFKA_SERVER"] + ':' + os.environ["KAFKA_PORT"]
 
-    producer = KafkaProducer(bootstrap_servers=KAFKA_SERVER)
-    producer.send(TOPIC_NAME, value=msg.encode('utf-8'))
-    producer.flush()
+    try:
+        producer = KafkaProducer(bootstrap_servers=KAFKA_SERVER)
+        producer.send(TOPIC_NAME, value=msg.encode('utf-8'))
+        producer.flush()
+    except:
+        kafkaisnotready=1
     #############
 
 class ConnectionService(
@@ -44,8 +47,10 @@ class ConnectionService(
         # TODO: Set Env Variable
         # url_apiperson='http://localhost:30001'
         # url_apilocation='http://localhost:30002'
-        url_apiperson='http://modules_apiperson_1:5000'
-        url_apilocation='http://modules_apilocation_1:5000'
+        # url_apiperson='http://modules_apiperson_1:5000'
+        # url_apilocation='http://modules_apilocation_1:5000'
+        url_apiperson='http://udaconnect-apiperson:5000'
+        url_apilocation='http://udaconnect-apilocation:5000'
         log2kafka('/api/<<<NEW GRPC REQUEST>>>/person/'+str(request.person_id)+'/find_contacts/'+str(query))
 
         response = requests.get(url_apilocation+'/api/locations/person/'+str(request.person_id), params=query)
@@ -118,14 +123,23 @@ class ConnectionService(
         return ConnectionResponse(locpersons=persons_connected)
 
 def serve():
+    print('<<SERVE>>')
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     connections_pb2_grpc.add_ConnectionsServicer_to_server(
         ConnectionService(), server
     )
+    print('About to START SERVER')
+
     server.add_insecure_port("[::]:50051")
     server.start()
     server.wait_for_termination()
 
 
-if __name__ == "__main__":
-    serve()
+# if __name__ == "__main__":
+#     print('Entered the MAIN')
+#     serve()
+#     print('Ending MAIN')
+
+print('Entered the MAIN')
+serve()
+print('Ending MAIN')

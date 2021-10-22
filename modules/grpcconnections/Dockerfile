@@ -7,4 +7,7 @@ RUN pip install grpcio-tools
 RUN pip install kafka-python
 
 COPY . .
-CMD ["python", "server/connections.py"]
+
+EXPOSE 50051
+
+ENTRYPOINT ["python", "server/connections.py"]
