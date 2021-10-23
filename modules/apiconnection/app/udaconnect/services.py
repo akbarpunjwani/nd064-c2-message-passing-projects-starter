@@ -1,3 +1,4 @@
+import os
 import json
 import grpc
 from connections_pb2_grpc import ConnectionsStub
@@ -26,7 +27,19 @@ class ConnectionService:
         large datasets. This is by design: what are some ways or techniques to help make this data integrate more
         smoothly for a better user experience for API consumers?
         """
-        channel = grpc.insecure_channel("udaconnect-grpcconnections:50051")
+        # channel = grpc.insecure_channel("udaconnect-grpcconnections:50051")
+        # channel = grpc.insecure_channel("localhost:50051")
+        try:
+            APICONNECTION_GRPCHOST = os.environ["APICONNECTION_GRPCHOST"]
+            APICONNECTION_GRPCPORT = os.environ["APICONNECTION_GRPCPORT"]
+        except:
+            APICONNECTION_GRPCHOST = 'localhost'
+            APICONNECTION_GRPCPORT = '50051'
+
+        print('Sending request to GRPC Server ', APICONNECTION_GRPCHOST,'...At Port:',APICONNECTION_GRPCPORT)
+
+        channel = grpc.insecure_channel(APICONNECTION_GRPCHOST+":"+APICONNECTION_GRPCPORT)
+
         client = ConnectionsStub(channel)
 
         fromdate = Date(

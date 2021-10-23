@@ -15,12 +15,12 @@ from connections_pb2 import (
 import connections_pb2_grpc
 
 def log2kafka(msg):
-    #############
-    # KAFKA CODE
-    TOPIC_NAME = os.environ["KAFKA_TOPIC"]
-    KAFKA_SERVER = os.environ["KAFKA_SERVER"] + ':' + os.environ["KAFKA_PORT"]
-
     try:
+        #############
+        # KAFKA CODE
+        TOPIC_NAME = os.environ["KAFKA_TOPIC"]
+        KAFKA_SERVER = os.environ["KAFKA_SERVER"] + ':' + os.environ["KAFKA_PORT"]
+
         producer = KafkaProducer(bootstrap_servers=KAFKA_SERVER)
         producer.send(TOPIC_NAME, value=msg.encode('utf-8'))
         producer.flush()
@@ -49,8 +49,28 @@ class ConnectionService(
         # url_apilocation='http://localhost:30002'
         # url_apiperson='http://modules_apiperson_1:5000'
         # url_apilocation='http://modules_apilocation_1:5000'
-        url_apiperson='http://udaconnect-apiperson:5000'
-        url_apilocation='http://udaconnect-apilocation:5000'
+        # url_apiperson='http://udaconnect-apiperson:5000'
+        # url_apilocation='http://udaconnect-apilocation:5000'
+        # DONE
+        try:
+            APIPERSON_HOST = os.environ["APIPERSON_HOST"]
+            APIPERSON_PORT = os.environ["APIPERSON_PORT"]
+        except:
+            APIPERSON_HOST = 'localhost'
+            APIPERSON_PORT = '30001'
+        url_apiperson = 'http://'+APIPERSON_HOST+':'+APIPERSON_PORT
+
+
+        try:
+            APILOCATION_HOST = os.environ["APILOCATION_HOST"]
+            APILOCATION_PORT = os.environ["APILOCATION_PORT"]
+        except:
+            APILOCATION_HOST = 'localhost'
+            APILOCATION_PORT = '30002'
+        url_apilocation = 'http://'+APILOCATION_HOST+':'+APILOCATION_PORT
+            
+        print(url_apiperson)
+        print(url_apilocation)
         log2kafka('/api/<<<NEW GRPC REQUEST>>>/person/'+str(request.person_id)+'/find_contacts/'+str(query))
 
         response = requests.get(url_apilocation+'/api/locations/person/'+str(request.person_id), params=query)
@@ -128,9 +148,15 @@ def serve():
     connections_pb2_grpc.add_ConnectionsServicer_to_server(
         ConnectionService(), server
     )
-    print('About to START SERVER')
 
-    server.add_insecure_port("[::]:50051")
+    try:
+        APICONNECTION_GRPCPORT = os.environ["APICONNECTION_GRPCPORT"]
+    except:
+        APICONNECTION_GRPCPORT = '50051'
+
+    print('Starting GRPC Server to listen client requests...At Port:',APICONNECTION_GRPCPORT)
+
+    server.add_insecure_port("[::]:"+APICONNECTION_GRPCPORT)
     server.start()
     server.wait_for_termination()
 

@@ -90,8 +90,16 @@ services:
       - KAFKA_SERVER=kafka
       - KAFKA_PORT=9092
       - KAFKA_TOPIC=udaconnectlogs
+      - APIPERSON_HOST=modules_apiperson_1
+      - APIPERSON_PORT=5000
+      - APILOCATION_HOST=modules_apilocation_1
+      - APILOCATION_PORT=5000
+      - APICONNECTION_HOST=modules_apiconnection_1
+      - APICONNECTION_PORT=5000
+      - APICONNECTION_GRPCHOST=modules_grpcconnections_1
+      - APICONNECTION_GRPCPORT=50051
     ports:
-      - 50052:50051
+      - 50051:50051
     depends_on:
       - db
       - kafka
@@ -112,6 +120,8 @@ services:
       - KAFKA_SERVER=kafka
       - KAFKA_PORT=9092
       - KAFKA_TOPIC=udaconnectlogs
+      - APICONNECTION_GRPCHOST=modules_grpcconnections_1
+      - APICONNECTION_GRPCPORT=50051
     ports:
       - 30003:5000
     depends_on:

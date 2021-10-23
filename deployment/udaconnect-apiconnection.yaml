@@ -75,4 +75,35 @@ spec:
             configMapKeyRef:
               name: db-env
               key: KAFKA_TOPIC
+        - name: API_PERSON_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: API_PERSON_HOST
+        - name: API_PERSON_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: API_PERSON_PORT
+        - name: API_LOCATION_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: API_LOCATION_HOST
+        - name: API_LOCATION_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: API_LOCATION_PORT
+        - name: API_CONNECTION_GRPCHOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: API_CONNECTION_GRPCHOST
+        - name: API_CONNECTION_GRPCPORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-env
+              key: API_CONNECTION_GRPCPORT
+
       restartPolicy: Always
