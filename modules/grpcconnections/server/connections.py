@@ -44,14 +44,6 @@ class ConnectionService(
                 'distance':str(request.meters)}
         print(query)        
 
-        # TODO: Set Env Variable
-        # url_apiperson='http://localhost:30001'
-        # url_apilocation='http://localhost:30002'
-        # url_apiperson='http://modules_apiperson_1:5000'
-        # url_apilocation='http://modules_apilocation_1:5000'
-        # url_apiperson='http://udaconnect-apiperson:5000'
-        # url_apilocation='http://udaconnect-apilocation:5000'
-        # DONE
         try:
             API_PERSON_HOST = os.environ["API_PERSON_HOST"]
             API_PERSON_PORT = os.environ["API_PERSON_PORT"]
@@ -99,11 +91,6 @@ class ConnectionService(
                                 connections[str(contact['person_id'])]={'location':contact, 'person':person}
                             else:
                                 print(response)
-                        # try:
-                        #     print(connections[str(contact['person_id'])]['location']['creation_time'])
-                        #     print('>>>',contact['creation_time'])
-                        # except:
-                        #     print('Some Err:',str(contact['person_id']))
                 else:
                     print(response)
             # print(connections.items())

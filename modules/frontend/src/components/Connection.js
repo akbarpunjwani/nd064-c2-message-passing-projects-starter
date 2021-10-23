@@ -20,9 +20,6 @@ class Connection extends Component {
 
   getConnections = (personId) => {
     if (personId) {
-      // TODO: endpoint should be abstracted into a config variable
-      //`http://localhost:5000/api/persons/${personId}/connection?start_date=2020-01-01&end_date=2020-12-30&distance=5`        
-      // `http://localhost:30004/api/persons/${personId}/connection?start_date=2020-01-01&end_date=2020-12-30&distance=5`
       fetch(        
         `http://localhost:30003/api/connections/${personId}/all?start_date=2020-01-01&end_date=2020-12-30&distance=5`
       )
