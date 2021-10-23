@@ -27,7 +27,7 @@ jsonobj = MessageToJson(client.find_contacts(request))
 jsonobj = jsonobj.replace("personId","person_id").replace('firstName','first_name').replace('lastName','last_name').replace('companyName','company_name')
 jsonobj = jsonobj.replace('creationTime','creation_time')
 print(json.loads(jsonobj)['locpersons'])
-# (ConnectionsStub(grpc.insecure_channel('10.42.0.230:50051'))).find_contacts(request)
+# (ConnectionsStub(grpc.insecure_channel('10.42.0.12:50051'))).find_contacts(request)
 # print(type(jsonobj))
 
 # import requests
