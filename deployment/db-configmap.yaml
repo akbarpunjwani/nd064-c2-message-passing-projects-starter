@@ -13,7 +13,7 @@ data:
 
   DB_USERNAME: "ct_admin"
   DB_NAME: "geoconnections"
-  DB_HOST: "udaconnect-db"
+  DB_HOST: "postgres"
   DB_PORT: "5432"
   KAFKA_SERVER: "kafka"
   KAFKA_PORT: "9092"

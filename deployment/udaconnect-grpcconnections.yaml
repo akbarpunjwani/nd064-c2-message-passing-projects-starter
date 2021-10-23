@@ -12,7 +12,7 @@ spec:
   - name: "50051"
     port: 50051
     targetPort: 50051
-    nodePort: 30051
+    nodePort: 30151
 ---
 apiVersion: apps/v1
 kind: Deployment
