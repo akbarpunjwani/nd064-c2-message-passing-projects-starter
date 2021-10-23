@@ -7,15 +7,15 @@ from connections_pb2 import ConnectionRequest, Date
 from google.protobuf.json_format import MessageToJson
 
 try:
-    APICONNECTION_GRPCHOST = os.environ["APICONNECTION_GRPCHOST"]
-    APICONNECTION_GRPCPORT = os.environ["APICONNECTION_GRPCPORT"]
+    API_CONNECTION_GRPCHOST = os.environ["API_CONNECTION_GRPCHOST"]
+    API_CONNECTION_GRPCPORT = os.environ["API_CONNECTION_GRPCPORT"]
 except:
-    APICONNECTION_GRPCHOST = 'localhost'
-    APICONNECTION_GRPCPORT = '50051'
+    API_CONNECTION_GRPCHOST = 'localhost'
+    API_CONNECTION_GRPCPORT = '50051'
 
-print('Sending request to GRPC Server ', APICONNECTION_GRPCHOST,'...At Port:',APICONNECTION_GRPCPORT)
+print('Sending request to GRPC Server ', API_CONNECTION_GRPCHOST,'...At Port:',API_CONNECTION_GRPCPORT)
 
-channel = grpc.insecure_channel(APICONNECTION_GRPCHOST+":"+APICONNECTION_GRPCPORT)
+channel = grpc.insecure_channel(API_CONNECTION_GRPCHOST+":"+API_CONNECTION_GRPCPORT)
 client = ConnectionsStub(channel)
 
 fromdate = Date(year=2020,month=1,day=1)

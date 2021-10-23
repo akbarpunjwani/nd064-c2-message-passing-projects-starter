@@ -53,21 +53,21 @@ class ConnectionService(
         # url_apilocation='http://udaconnect-apilocation:5000'
         # DONE
         try:
-            APIPERSON_HOST = os.environ["APIPERSON_HOST"]
-            APIPERSON_PORT = os.environ["APIPERSON_PORT"]
+            API_PERSON_HOST = os.environ["API_PERSON_HOST"]
+            API_PERSON_PORT = os.environ["API_PERSON_PORT"]
         except:
-            APIPERSON_HOST = 'localhost'
-            APIPERSON_PORT = '30001'
-        url_apiperson = 'http://'+APIPERSON_HOST+':'+APIPERSON_PORT
+            API_PERSON_HOST = 'localhost'
+            API_PERSON_PORT = '30001'
+        url_apiperson = 'http://'+API_PERSON_HOST+':'+API_PERSON_PORT
 
 
         try:
-            APILOCATION_HOST = os.environ["APILOCATION_HOST"]
-            APILOCATION_PORT = os.environ["APILOCATION_PORT"]
+            API_LOCATION_HOST = os.environ["API_LOCATION_HOST"]
+            API_LOCATION_PORT = os.environ["API_LOCATION_PORT"]
         except:
-            APILOCATION_HOST = 'localhost'
-            APILOCATION_PORT = '30002'
-        url_apilocation = 'http://'+APILOCATION_HOST+':'+APILOCATION_PORT
+            API_LOCATION_HOST = 'localhost'
+            API_LOCATION_PORT = '30002'
+        url_apilocation = 'http://'+API_LOCATION_HOST+':'+API_LOCATION_PORT
             
         print(url_apiperson)
         print(url_apilocation)
@@ -150,13 +150,13 @@ def serve():
     )
 
     try:
-        APICONNECTION_GRPCPORT = os.environ["APICONNECTION_GRPCPORT"]
+        API_CONNECTION_GRPCPORT = os.environ["API_CONNECTION_GRPCPORT"]
     except:
-        APICONNECTION_GRPCPORT = '50051'
+        API_CONNECTION_GRPCPORT = '50051'
 
-    print('Starting GRPC Server to listen client requests...At Port:',APICONNECTION_GRPCPORT)
+    print('Starting GRPC Server to listen client requests...At Port:',API_CONNECTION_GRPCPORT)
 
-    server.add_insecure_port("[::]:"+APICONNECTION_GRPCPORT)
+    server.add_insecure_port("[::]:"+API_CONNECTION_GRPCPORT)
     server.start()
     server.wait_for_termination()
 
